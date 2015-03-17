@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Kaleidoscope Simulator</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>Kaleidoscope Simulator</h1>
+        <canvas id='canvas_div'  width='800' height='800' style=" border:1px solid #0000ff;"> 
+
+        </canvas>
+        <div id='action_div'>
+            <button id='start_button'>start</button>
+        </div>
+        <script>
+            //Set global variables 
+            var c = document.getElementById("canvas_div");
+            var ctx = c.getContext("2d");
+            var maxX = c.width;
+            var maxY = c.height;
+
+            /****
+             * Face Class
+             * 
+             * @returns {undefined}
+             */
+            Face = function ()
+            {
+                this.eX = 0;
+                this.eY = 0;
+                this.dX = 0;
+                this.dY = 0;
+                /**
+                 * 1st Clear all the possible areas where the eyes could be
+                 * 
+                 * @type @exp;Face@pro;drawFace@pro;faceRadius|Number
+                 */
+                this.makeCrazyEyes = function ()
+                {
+                    this.eX = Math.ceil(Math.random() * 70) - 5;
+                    this.eY = Math.ceil(Math.random() * 70) - 5;
+                    this.dX = Math.ceil(Math.random() * 70) - 5;
+                    this.dY = Math.ceil(Math.random() * 70) - 5;
+
+                };
+                /**
+                 * Determines how face is displayed
+                 *  @param {int} sizeOfFace
+                 * @param {int} xPosF
+                 * @param {int} yPosF
+                 * @returns {undefined}
+                 */
+                this.drawFace = function (sizeOfFace, xPosF, yPosF)
+                {
+                    var faceRadius = sizeOfFace / 2;
+                    var eyeRadius = sizeOfFace / 20;
+                    var noseSize = sizeOfFace / 7;
+                    var mouthSize = sizeOfFace / 10;
+                    var centerX = xPosF;
+                    var centerY = yPosF;
+                    var eyesApart = faceRadius / 4;
+                    var noseFromCenter = faceRadius / 4;
+                    var eyeFromCenter = faceRadius / 3;
+                    var mouthFromCenter = faceRadius / 3;
+
+                    eX = eY = dX = dY = 0;
+                    var face = new Trinket("circle", "#50F", faceRadius);
+                    face.position(centerX, centerY);
+
+                    var eyeLeft = new Trinket("circle", "#0F0", eyeRadius);
+                    eyeLeft.position(centerX - eyesApart + this.eX, centerY - eyeFromCenter + this.eY);
+
+                    var eyeRight = new Trinket("circle", "#0F0", eyeRadius);
+                    eyeRight.position(centerX + eyesApart + this.dX, centerY - eyeFromCenter + this.dY);
+
+                    var nose = new Trinket("triangle", "#ff0", noseSize);
+                    nose.position(centerX, centerY - noseFromCenter);
+
+                    var t1 = new Trinket("square", "#F00", mouthSize);
+                    t1.position(centerX, centerY + mouthFromCenter);
+                    console.log(eX + " ey " + eY);
+                };
+            }; /// End of Face class
+
+            //The class of the object to create
+            Trinket = function (shape_p, colour_p, size_p)
+            {
+                //Fields
+                this.shape = shape_p;
+                this.size = size_p;
+                this.colour = colour_p;
+
+
+                /**
+                 * 
+                 * @param {type} new_xpos
+                 * @param {type} new_ypos
+                 * @returns {undefined}
+                 */
+                this.position = function (new_xpos, new_ypos)
+                {
+                    // ctx.fillStyle = "#00FF00";
+                    // ctx.fillRect(new_xpos, new_ypos, new_xpos+this.size_p, new_ypos + this.size_p);
+                    ctx.fillStyle = this.colour;
+                    switch (this.shape)
+                    {
+                        case "square":
+                            ctx.fillRect(new_xpos, new_ypos, this.size, this.size);
+                            break;
+                        case "circle":
+                            ctx.beginPath();
+                            ctx.arc(new_xpos, new_ypos, this.size, 0, 2 * Math.PI);
+                            ctx.fill();
+                            //  ctx.strokeStyle = '#003300';
+                            ctx.stroke();
+                            break;
+                        case "triangle":
+                            ctx.moveTo(new_xpos, new_ypos);
+                            ctx.lineTo(new_xpos + this.size, new_ypos + this.size);
+                            ctx.lineTo(new_xpos, new_ypos + this.size);
+                            ctx.closePath();
+                            ctx.fill();
+                            break;
+                        default:
+                            alert("No shape " + this.shape);
+                    }
+                };
+            }; /// END OF Tricket CLASS definition
+            // function drawFace() {
+
+
+            //    alert(" returning ? " + drawFace());
+
+//            
+//            var t1 = new Trinket("triangle", "#ff0", 100);
+//            t1.position(130, 0);
+            //  drawFace, 100);
+            setInterval(function () {
+                ctx.fillStyle = "#000000";
+                ctx.fillRect(0, 0, maxY, maxY);
+
+                var aFaceObj = new Face();
+                aFaceObj.drawFace(200, 200, 100);
+
+                var bFaceObj = new Face();
+                bFaceObj.makeCrazyEyes();
+                bFaceObj.drawFace(300, 400, 400);
+
+                var cFaceObj = new Face();
+                cFaceObj.drawFace(100, 200, 600);
+
+                var dFaceObj = new Face();
+                dFaceObj.drawFace(100, 600, 600);
+
+                
+            }, 300);
+
+        </script>
+    </body>
+</html>
